@@ -7,13 +7,13 @@ import tempfile
 import PyPDF2
 import docx2txt
 from dotenv import load_dotenv
-import openai
+from openai import OpenAI
 
 # Load environment variables
 load_dotenv()
 
 # Initialize OpenAI client
-openai.api_key = os.getenv("OPENAI_API_KEY")
+client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 app = FastAPI(title="Resume Screening API")
 
@@ -56,7 +56,7 @@ def extract_text_from_resume(file_path):
 def generate_questions(resume_text):
     """Generate questions based on resume text using OpenAI."""
     try:
-        response = openai.chat.completions.create(
+        response = client.chat.completions.create(
             model="gpt-4",
             messages=[
                 {"role": "system", "content": "You are an AI assistant that helps recruiters by generating relevant interview questions based on a candidate's resume. Generate 5-7 specific questions that will help assess the candidate's skills, experience, and fit for potential roles."},
